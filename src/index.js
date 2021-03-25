@@ -1,17 +1,6 @@
 const {ApolloServer} = require('apollo-server');
-
-const typeDefs = `
-type Query {
-    info: String!,
-    feed: [Link!]!
-}
-
-type Link {
-  id: ID!
-  description: String!
-  url: String!
-}
-`
+const fs = require('fs');
+const path = require('path');
 
 let links = [{
     id: 'link-0',
@@ -19,20 +8,28 @@ let links = [{
     description: 'Fullstack tutorial for GraphQL'
   }]
 
+let idCount = links.length
 const resolvers = {
-    Query: {
-        info: () => `This is the api of hackernews clone`,
-        feed: () => links,
-    },
-    Link:{
-        id: (parent) => parent.id,
-        description: (parent) => parent.description,
-        url: (parent) => parent.url
+Query: {
+    info: () => `This is the API of a Hackernews Clone`,
+    feed: () => links,
+},
+Mutation: {
+    // 2
+    post: (parent, args) => {
+        const link = {
+        id: `link-${idCount++}`,
+        description: args.description,
+        url: args.url,
     }
+    links.push(link)
+    return link
+    }
+},
 }
 
 const server = new ApolloServer({
-    typeDefs,
+    typeDefs: fs.readFileSync(path.join(__dirname, 'schema.graphql'), 'utf-8'),
     resolvers,
 })
 
