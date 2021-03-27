@@ -10,22 +10,22 @@ let links = [{
 
 let idCount = links.length
 const resolvers = {
-Query: {
-    info: () => `This is the API of a Hackernews Clone`,
-    feed: () => links,
-},
-Mutation: {
-    // 2
-    post: (parent, args) => {
-        const link = {
-        id: `link-${idCount++}`,
-        description: args.description,
-        url: args.url,
-    }
-    links.push(link)
-    return link
-    }
-},
+    Query: {
+        info: () => `This is the API of a Hackernews Clone`,
+        feed: () => links,
+    },
+    Mutation: {
+        // 2
+        post: (parent, args) => {
+            const link = {
+            id: `link-${idCount++}`,
+            description: args.description,
+            url: args.url,
+        }
+        links.push(link)
+        return link
+        }
+    },
 }
 
 const server = new ApolloServer({
